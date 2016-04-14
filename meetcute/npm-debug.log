@@ -27,33 +27,33 @@
 16 verbose addNameRange registry:https://registry.npmjs.org/ios-deploy not in flight; fetching
 17 verbose request uri https://registry.npmjs.org/ios-deploy
 18 verbose request no auth needed
-19 info attempt registry request try #1 at 12:05:05 AM
-20 verbose request id 0ef2ab05fd381b11
+19 info attempt registry request try #1 at 1:35:20 PM
+20 verbose request id c1cb5366640f14f5
 21 verbose etag "81NX9HBLREKB5KSUAXMQ0IXPI"
 22 http request GET https://registry.npmjs.org/ios-deploy
 23 http 304 https://registry.npmjs.org/ios-deploy
-24 verbose headers { date: 'Tue, 12 Apr 2016 04:05:05 GMT',
+24 verbose headers { date: 'Tue, 12 Apr 2016 17:35:21 GMT',
 24 verbose headers   via: '1.1 varnish',
 24 verbose headers   'cache-control': 'max-age=300',
 24 verbose headers   etag: '"81NX9HBLREKB5KSUAXMQ0IXPI"',
-24 verbose headers   age: '0',
+24 verbose headers   age: '17',
 24 verbose headers   connection: 'keep-alive',
-24 verbose headers   'x-served-by': 'cache-dfw1834-DFW',
+24 verbose headers   'x-served-by': 'cache-dfw1825-DFW',
 24 verbose headers   'x-cache': 'HIT',
 24 verbose headers   'x-cache-hits': '1',
-24 verbose headers   'x-timer': 'S1460433905.656114,VS0,VE285',
+24 verbose headers   'x-timer': 'S1460482521.548394,VS0,VE0',
 24 verbose headers   vary: 'Accept-Encoding' }
 25 silly get cb [ 304,
-25 silly get   { date: 'Tue, 12 Apr 2016 04:05:05 GMT',
+25 silly get   { date: 'Tue, 12 Apr 2016 17:35:21 GMT',
 25 silly get     via: '1.1 varnish',
 25 silly get     'cache-control': 'max-age=300',
 25 silly get     etag: '"81NX9HBLREKB5KSUAXMQ0IXPI"',
-25 silly get     age: '0',
+25 silly get     age: '17',
 25 silly get     connection: 'keep-alive',
-25 silly get     'x-served-by': 'cache-dfw1834-DFW',
+25 silly get     'x-served-by': 'cache-dfw1825-DFW',
 25 silly get     'x-cache': 'HIT',
 25 silly get     'x-cache-hits': '1',
-25 silly get     'x-timer': 'S1460433905.656114,VS0,VE285',
+25 silly get     'x-timer': 'S1460482521.548394,VS0,VE0',
 25 silly get     vary: 'Accept-Encoding' } ]
 26 verbose etag https://registry.npmjs.org/ios-deploy from cache
 27 verbose get saving ios-deploy to /Users/Sercan/.npm/registry.npmjs.org/ios-deploy/.cache.json

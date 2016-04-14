@@ -7,7 +7,7 @@ var app = {
 		document.addEventListener('deviceready', this.onDeviceReady);
 	},
 	onDeviceReady: function () {
-		//console.log("device is ready");
+		alert("device is ready");
 		app.modal = window.modal;
 		document.querySelector("#menu").addEventListener("click", app.navigate);
 		document.getElementById("madlibLink").addEventListener("click", app.navigate);
@@ -21,14 +21,13 @@ var app = {
 		window.addEventListener("popstate", app.popPop);
 
 
-		//console.log("test the sqlitePlugin");
-		window.sqlitePlugin.echoTest(function () {
-			console.log("sqlite plugin supported");
+		alert("test the sqlitePlugin");
+		/*window.sqlitePlugin.echoTest(function () {
+			alert("sqlite plugin supported");
 		}, function () {
-			console.warn("sqlite plugin NOT supported");
-		});
-
-		//console.log("set up DB");
+			alert("sqlite plugin NOT supported");
+		});*/
+		alert("set up DB");
 		app.setupDB();
 
 	},
@@ -74,15 +73,19 @@ var app = {
 		if (id == "contacts") {
 			console.log("get contacts list ready");
 			//call the fetch contacts page
+			fetchContacts();
 		}
 		if (id == "scan") {
 			console.log("get profile ready and qr code");
 			//call the fetch profile function
+			fetchProfile();
 		}
 		if (id == "madlib") {
 			//load the madlib story for the contact
 			var contact = ct.getAttribute("data-id");
 			// call the load story function
+			loadStory(contact_id);
+
 		}
 	},
 	setupDB: function () {
@@ -108,17 +111,43 @@ var app = {
 				console.log('Open database ERROR: ' + JSON.stringify(err));
 			});
 	},
-	saveProfile: function () {
+	saveProfile: function (db) {
 		//called by clicking on the LAST button in the modal wizard
 		console.log("save Profile");
-
 		//save all the info from the modal into local variables
-
+		var txtName = document.getElementById("txtName").value;
+		var txtEmail = document.getElementById("txtEmail").value;
+		var txtSex = document.getElementById("txtSex").value;
+		var txtBeverage = document.getElementById("txtBeverage").value;
+		var txtFood = document.getElementById("txtFood").value;
+		var txtClothing = document.getElementById("txtClothing").value;
+		var txtTimeOfDay = document.getElementById("txtTimeOfDay").value;
+		var txtSocial = document.getElementById("txtSocial").value;
+		var txtTransport = document.getElementById("txtTransport").value;
+		var txtNumber = document.getElementById("txtNumber").value;
+		var txtFacial = document.getElementById("txtFacial").value;
 		//delete current values in profile table
 
 		//insert all the new info from modal into profile table
 
+		//check to ensure the app.db object has been created
+		alert(app.db);
+		if (txtName !== "" && txtEmail !== "") {
+			//Insert the user entered details into the cars table, note the use of the ? placeholder, these will replaced by the data passed in as an array as the second parameter
+			app.db.transaction(function (t) {
+				console.log("I got to the transaction");
+				t.executeSql("INSERT INTO profile (id, txtName, txtEmail) VALUES (?,?, ?)", [id, txtName, txtEmail]);
+				console.log("Insert worked");
+			});
+		} else {
+			alert("db not found, your browser does not support web sql!");
+		}
+
+
+		//insert all the new info from modal into profile table
+
 		//call fetchprofile when done
+
 	},
 	fetchProfile: function () {
 		//fetch all the profile info from profile table
@@ -136,9 +165,6 @@ var app = {
 	},
 	showWizard: function (ev) {
 		modal.init();
-		modal.setActive(0);
-		modal.prepareSteps();
-
 	},
 	fetchContacts: function () {
 		//select all the madlib_id, full_name form madlibs table
