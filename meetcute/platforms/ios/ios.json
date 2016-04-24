@@ -9,10 +9,6 @@
                 "parents": {
                     "/*": [
                         {
-                            "xml": "<feature name=\"QRCode\"><param name=\"ios-package\" value=\"CDVQRCode\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"BarcodeScanner\"><param name=\"ios-package\" value=\"CDVBarcodeScanner\" /></feature>",
                             "count": 1
                         },
@@ -38,9 +34,6 @@
         }
     },
     "installed_plugins": {
-        "cordova-plugin-QRCode": {
-            "PACKAGE_NAME": "ca.edumedia.kum00003"
-        },
         "cordova-plugin-barcodescanner": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
         },
@@ -62,14 +55,6 @@
     },
     "dependent_plugins": {},
     "modules": [
-        {
-            "file": "plugins/cordova-plugin-QRCode/www/QRCode.js",
-            "id": "cordova-plugin-QRCode.QRCode",
-            "pluginId": "cordova-plugin-QRCode",
-            "clobbers": [
-                "QRCode"
-            ]
-        },
         {
             "file": "plugins/cordova-plugin-barcodescanner/www/barcodescanner.js",
             "id": "cordova-plugin-barcodescanner.BarcodeScanner",
@@ -120,7 +105,6 @@
         }
     ],
     "plugin_metadata": {
-        "cordova-plugin-QRCode": "1.0.2-dev",
         "cordova-plugin-barcodescanner": "0.7.0",
         "cordova-plugin-console": "1.0.2",
         "cordova-plugin-device": "1.1.1",

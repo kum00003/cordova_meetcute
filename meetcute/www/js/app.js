@@ -23,7 +23,7 @@ var app = {
 
 
 		console.log("test the sqlitePlugin");
-			window.sqlitePlugin.echoTest(function () {
+		window.sqlitePlugin.echoTest(function () {
 			alert("sqlite plugin supported");
 		}, function () {
 			alert("sqlite plugin NOT supported");
@@ -85,7 +85,7 @@ var app = {
 			//load the madlib story for the contact
 			var contact = ct.getAttribute("data-id");
 			// call the load story function
-			loadStory(contact_id);
+			app.loadStory(contact_id);
 
 		}
 	},
@@ -117,22 +117,22 @@ var app = {
 		//called by clicking on the LAST button in the modal wizard
 		console.log("save Profile");
 		//save all the info from the modal into local variables
-		var txtName = document.getElementById("txtName").value;
-		var txtEmail = document.getElementById("txtEmail").value;
-		var txtSex = document.getElementById("txtSex").value;
-		var txtBeverage = document.getElementById("txtBeverage").value;
-		var txtFood = document.getElementById("txtFood").value;
-		var txtClothing = document.getElementById("txtClothing").value;
-		var txtTimeOfDay = document.getElementById("txtTimeOfDay").value;
-		var txtSocial = document.getElementById("txtSocial").value;
-		var txtTransport = document.getElementById("txtTransport").value;
-		var txtNumber = document.getElementById("txtNumber").value;
-		var txtFacial = document.getElementById("txtFacial").value;
+		var name = document.getElementById("txtName").value;
+		var email = document.getElementById("txtEmail").value;
+		var gender = document.getElementById("txtSex").value;
+		var beverage = document.getElementById("txtBeverage").value;
+		var food = document.getElementById("txtFood").value;
+		var clothing = document.getElementById("txtClothing").value;
+		var time = document.getElementById("txtTimeOfDay").value;
+		var social = document.getElementById("txtSocial").value;
+		var transport = document.getElementById("txtTransport").value;
+		var number = document.getElementById("txtNumber").value;
+		var facial = document.getElementById("txtFacial").value;
 
-		var output = txtName + ";" + txtEmail + ";" + txtSex + ";" + txtBeverage + ";" + txtFood + ";" + txtFood + ";" + txtClothing + ";" + txtTimeOfDay + ";" + txtSocial + ";" + txtTransport + ";" + txtNumber + ";" + txtFacial;
+		var output = name + ";" + email + ";" + gender + ";" + beverage + ";" + food + ";" + clothing + ";" + time + ";" + social + ";" + transport + ";" + number + ";" + facial + ";";
 		console.log(output);
-		
-		
+
+
 		//check to ensure the app.db object has been created
 		if (app.db == null) {
 			app.db = sqlitePlugin.openDatabase({
@@ -140,81 +140,80 @@ var app = {
 				iosDatabaseLocation: 'default'
 			});
 		}
-		
+
 		app.profile = {};
 		//delete current values in profile table
-		app.db.executeSql("DELETE FROM profile",[]);
-		
-	   	app.db.transaction(function(tx){
-		console.log("saving profile data");
-		//insert all the new info from modal into profile table
-		
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['full_name', txtName], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});	
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['email', txtEmail], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['gender', txtSex], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['beverage', txtBeverage], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['food', txtFood], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['clothing', txtClothing], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['time', txtTimeOfDay], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['social', txtSocial], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['transport', txtTransport], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['number', txtNumber], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		
-		tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['facial', txtFacial], function(){
-               // success
-           }, function (e){
-               console.log(e.message);
-		});
-		}, function (error){
+		app.db.executeSql('DELETE FROM profile', []);
+
+		app.db.transaction(function (tx) {
+			console.log("saving profile data");
+			//insert all the new info from modal into profile table
+
+			tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['full_name', name], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile(item_name, item_value) VALUES(?,?)', ['email', email], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['gender', gender], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['beverage', beverage], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['food', food], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['clothing', clothing], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['time', time], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['social', social], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['transport', transport], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['number', number], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+
+			tx.executeSql('INSERT INTO profile (item_name, item_value) VALUES(?,?)', ['facial', facial], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
+		}, function (error) {
 			//error
 			console.log("failed transaction: adding the profile")
-		}, function(){
+		}, function () {
 			//call fetchprofile when done
 			app.fetchProfile();
 		});
-	
-	},
 
+	},
 	fetchProfile: function () {
 		//fetch all the profile info from profile table
 		if (app.db == null) {
@@ -222,40 +221,37 @@ var app = {
 				name: 'DBmeetcute.2',
 				iosDatabaseLocation: 'default'
 			});
-		}
-		app.db.executeSql('SELECT item_name, item_value FROM profile ORDER BY item_id', [],
-			function (results) {
-				numRows = results.rows.length;
+		};
+
+		app.db.executeSql('SELECT item_name, item_value FROM profile ORDER BY item_id', [], function (results) {
+				var numRows = results.rows.length;
+			
 				app.profile = {};
+				//update app.profile
 				for (var i = 0; i < numRows; i++) {
 					app.profile[results.rows.item(i).item_name] = results.rows.item(i).item_value;
 				}
 				app.createQR();
-				//update app.profile
-				document.getElementById("name").textContent = "Name:" + app.profile['full_name'];
+				
+				//update home page info based on app.profile
+				document.getElementById("name").textContent = "Name:" + app.profile['full_name']; 
 				document.getElementById("email").textContent = "Email: " + app.profile['email'];
 				document.getElementById("gender").textContent = "Gender pronoun: " + app.profile['gender'];
 				document.getElementById("beverage").textContent = "Type of Beverage: " + app.profile['beverage'];
 				document.getElementById("food").textContent = "Type of Food: " + app.profile['food'];
 				document.getElementById("clothing").textContent = "Clothing: " + app.profile['clothing'];
 				document.getElementById("time").textContent = "Time of Day: " + app.profile['time'];
-				document.getElementById("social").textContent = "Social Media: " + app.profile["social"];
-				document.getElementById("transport").textContent = "Mode of Transport: " + app.profile["transport"];
-				document.getElementById("number").textContent = "Favourite Number: " + app.profile["number"];
-				document.getElementById("facial").textContent = "Facial Expression: " + app.profile["facial"];
+				document.getElementById("social").textContent = "Social Media: " + app.profile['social'];
+				document.getElementById("transport").textContent = "Mode of Transport: " + app.profile['transport'];
+				document.getElementById("number").textContent = "Favourite Number: " + app.profile['number'];
+				document.getElementById("facial").textContent = "Facial Expression: " + app.profile['facial'];
+			
 			},
 			function (error) {
 				console.log("failed to fetch resutls for profile" + error.message);
 			});
-
-
-
-
-		//update home page info based on app.profile
-
-
 		//generate the new QRCode based on the profile
-		//app.createQR();
+		
 
 
 	},
@@ -266,9 +262,10 @@ var app = {
 			str += app.profile[prop] + ";";
 		};
 		console.log("QRCODE string: " + str);
-
+		
 		//update the QR caode using new QRCode( ) method
 		//Link: https://davidshimjs.githun.io/qrcodejs
+		document.getElementById("qr").textContent = "";
 		var qrcode = new QRCode(document.getElementById("qr"), {
 			text: str,
 			width: 300,
@@ -284,7 +281,19 @@ var app = {
 		modal.init();
 	},
 	fetchContacts: function () {
+
+		//open the database and query the madlib table
+		// if the rows are zero 
+		//create a list 
+		//madlib_id use the for loop 
+		// li set atttribute set href=madlib
 		//select all the madlib_id, full_name form madlibs table
+
+		/*  var li = document.createElement("li");   
+                    li.innerHTML = '<h3 data-href= contact_id > </h3>';
+                    li.addEventListener("click", app.navigate);
+                    ul.appendChild(li);
+						*/
 
 		//loop through results and build the list for contacts page
 		//add click event to each li to call app.navigate
@@ -293,16 +302,13 @@ var app = {
 		ev.preventDefault();
 
 		//call the plugin barcodeScanner.scan() method
-		cordova.plugins.barcodeScanner.scan(
-			function (result) {
+		cordova.plugins.barcodeScanner.scan(function (result) {
 				alert("We got a barcode\n" +
 					"Result: " + result.text + "\n" +
 					"Format: " + result.format + "\n" +
 					"Cancelled: " + result.cancelled);
 				if (!result.cancelled) {
-
 					//extract the string from the QRCode
-
 					var strQR = result.text;
 					var partsQR = strQR.split(";");
 					var name = partsQR[0];
@@ -316,6 +322,8 @@ var app = {
 					var transport = partsQR[8];
 					var number = partsQR[9];
 					var facial = partsQR[10];
+					
+					
 					//build a madlib by randomly picking a value from app.profile OR data from QRCode
 					var date = new Date();
 					var today = dat.getDate + " " + app.months[date.getMonth()];
@@ -331,17 +339,32 @@ var app = {
 			function (error) {
 				alert("Scanning failed: " + error);
 			}
+			
+			//generate the mad lib here
+											
 		);
 
-
-
-
+		if (app.db == null) {
+			app.db = sqlitePlugin.openDatabase({
+				name: 'DBmeetcute.2',
+				iosDatabaseLocation: 'default'
+			});
+		};
+		
+		tx.executeSql('INSERT INTO mablibs(full_name, madlib_txt) VALUES(?,?)', [contact_id, name], function () {
+				// success
+			}, function (e) {
+				console.log(e.message);
+			});
 		//insert the new madlib into the madlibs table (creating a new contact)
-
+		
+		
 		//new li will be displayed when contact page loads
 
 	},
+
 	loadStory: function (contact_id) {
+
 		//use the contact_id as the madlib_id from madlibs table
 
 		//select the madlib_txt and display as the new madlib

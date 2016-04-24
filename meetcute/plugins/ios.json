@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-QRCode": {
-            "PACKAGE_NAME": "ca.edumedia.kum00003"
-        },
         "cordova-plugin-barcodescanner": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
         },
