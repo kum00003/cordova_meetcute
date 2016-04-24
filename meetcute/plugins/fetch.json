@@ -15,14 +15,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-sqlite": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-sqlite"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-barcodescanner": {
         "source": {
             "type": "registry",
@@ -51,6 +43,14 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-whitelist@1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-sqlite-storage": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-sqlite-storage@1.2.0"
         },
         "is_top_level": true,
         "variables": {}

@@ -33,10 +33,10 @@
         "cordova-plugin-keyboard": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
         },
-        "cordova-plugin-sqlite": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
         },
-        "cordova-plugin-whitelist": {
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
         }
     },
@@ -81,12 +81,11 @@
             ]
         },
         {
-            "file": "plugins/cordova-plugin-sqlite/www/SQLitePlugin.js",
-            "id": "cordova-plugin-sqlite.SQLitePlugin",
-            "pluginId": "cordova-plugin-sqlite",
+            "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+            "id": "cordova-sqlite-storage.SQLitePlugin",
+            "pluginId": "cordova-sqlite-storage",
             "clobbers": [
-                "window.sqlitePlugin",
-                "cordova.plugins.sqlitePlugin"
+                "SQLitePlugin"
             ]
         }
     ],
@@ -96,7 +95,7 @@
         "cordova-plugin-console": "1.0.2",
         "cordova-plugin-device": "1.1.1",
         "cordova-plugin-keyboard": "1.1.4",
-        "cordova-plugin-sqlite": "1.0.3",
-        "cordova-plugin-whitelist": "1.2.1"
+        "cordova-plugin-whitelist": "1.2.1",
+        "cordova-sqlite-storage": "1.2.0"
     }
 }

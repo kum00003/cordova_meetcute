@@ -22,10 +22,10 @@
         "cordova-plugin-keyboard": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
         },
-        "cordova-plugin-sqlite": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
         },
-        "cordova-plugin-whitelist": {
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
         }
     },

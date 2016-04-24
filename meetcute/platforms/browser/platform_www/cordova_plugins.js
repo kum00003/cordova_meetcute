@@ -39,16 +39,15 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-sqlite/www/SQLitePlugin.js",
-        "id": "cordova-plugin-sqlite.SQLitePlugin",
-        "pluginId": "cordova-plugin-sqlite",
+        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+        "id": "cordova-sqlite-storage.SQLitePlugin",
+        "pluginId": "cordova-sqlite-storage",
         "clobbers": [
-            "window.sqlitePlugin",
-            "cordova.plugins.sqlitePlugin"
+            "SQLitePlugin"
         ]
     }
 ];
-module.exports.metadata =
+module.exports.metadata = 
 // TOP OF METADATA
 {
     "cordova-plugin-QRCode": "1.0.2-dev",
@@ -56,8 +55,8 @@ module.exports.metadata =
     "cordova-plugin-console": "1.0.2",
     "cordova-plugin-device": "1.1.1",
     "cordova-plugin-keyboard": "1.1.4",
-    "cordova-plugin-sqlite": "1.0.3",
-    "cordova-plugin-whitelist": "1.2.1"
+    "cordova-plugin-whitelist": "1.2.1",
+    "cordova-sqlite-storage": "1.2.0"
 }
 // BOTTOM OF METADATA
 });
