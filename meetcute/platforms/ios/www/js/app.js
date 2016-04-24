@@ -321,88 +321,88 @@ var app = {
 		//add click event to each li to call app.navigate
 	},
 	scan: function (ev) {
-		ev.preventDefault();
-		//call the plugin barcodeScanner.scan() method
-		cordova.plugins.barcodeScanner.scan(
-			function (result) {
-				alert("We got a barcode\n" +
-					"Result: " + result.text + "\n" +
-					"Format: " + result.format + "\n" +
-					"Cancelled: " + result.cancelled);
-				if (!result.cancelled) {
-					//extract the string from the QRCode
-					var strQR = result.text;
-					var partsQR = strQR.split(";");
-					var name = partsQR[0];
-					var email = partsQR[1];
-					var gender = partsQR[2];
-					var beverage = partsQR[3];
-					var food = partsQR[4];
-					var clothing = partsQR[5];
-					var time = partsQR[6];
-					var social = partsQR[7];
-					var transport = partsQR[8];
-					var number = partsQR[9];
-					var facial = partsQR[10];
+        ev.preventDefault();
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                console.log(result.format);
+                console.log(result.cancelled);
+                if (!result.cancelled) {
+                    //extract the string from the QRCode
+                    var strQR = result.text;
+                    var partsQR = strQR.split(";");
+                    var name = partsQR[0];
+                    var email = partsQR[1];
+                    var gender = partsQR[2];
+                    var beverage = partsQR[3];
+                    var food = partsQR[4];
+                    var clothing = partsQR[5];
+                    var time = partsQR[6];
+                    var social = partsQR[7];
+                    var transport = partsQR[8];
+                    var number = partsQR[9];
+                    var facial = partsQR[10];
+                    var date = new Date();
+                    var today = date.getDate() + " " + app.months[date.getMonth()];
+                    var userrand1, userrand2;
+                    if ((Math.round(Math.random())) == 0) {
+                        userrand1 = app.profile.full_name;
+                        gender1 = app.profile.gender;
+                        userrand2 = name;
+                        gender2 = gender;
+                    } else {
+                        userrand1 = name;
+                        gender1 = gender;
+                        userrand2 = app.profile.full_name;
+                        gender2 = app.profile.gender;
+                    }
+                    var test = "N:" + name + ";E:" + email + ";G:" + gender + ";B:" + beverage + ";F:" + food + ";C:" + clothing + ";T:" + time + ";M:" + social + ";T:" + transport + ";N:" + number + ";F:" + facial;
+                    console.log(test + "AND" + userrand1 + ";" + userrand2 + ";" + gender1 + ";" + gender2);
 
+                    //build a madlib by randomly picking a value from app.profile OR data from QRCode
+                    document.querySelector('#story [data-ref="user-a"]').textContent = app.profile.full_name;
+                    document.querySelector('#story [data-ref="user-b"]').textContent = name;
+                    document.querySelector('#story [data-ref="date"]').textContent = today;
+                    document.querySelector('#story [data-ref="beverage-1"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.beverage : beverage;
+                    document.querySelector('#story [data-ref="transport"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.transport : transport;
+                    document.querySelector('#story [data-ref="user-rand-1-1"]').textContent = userrand1;
+                    document.querySelector('#story [data-ref="gender-1"]').textContent = gender1;
+                    document.querySelector('#story [data-ref="beverage-2"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.beverage : beverage;
+                    document.querySelector('#story [data-ref="user-rand-2-1"]').textContent = userrand2;
+                    document.querySelector('#story [data-ref="clothing"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.clothing : clothing;
+                    document.querySelector('#story [data-ref="user-rand-2-2"]').textContent = userrand2;
+                    document.querySelector('#story [data-ref="user-rand-1-2"]').textContent = userrand1;
+                    document.querySelector('#story [data-ref="facial"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.facial : facial;
+                    document.querySelector('#story [data-ref="social"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.social : social;
+                    document.querySelector('#story [data-ref="time"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.time : time;
+                    document.querySelector('#story [data-ref="number"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.number : number;
+                    document.querySelector('#story [data-ref="food"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.food : food;
 
-					//build a madlib by randomly picking a value from app.profile OR data from QRCode
-					var date = new Date();
-					var today = dat.getDate + " " + app.months[date.getMonth()];
-					
-					var userrand1, userrand2, gender1;
-					if ((Math.round(Math.random())) == 0) {
-						userrand1 = app.profile.full_name;
-						gender1 = app.profile.gender;
-						userrand2 = name;
-						gender2 = gender;
-					} else {
-						userrand1 = name;
-						gender1 = gender;
-						userrand2 = app.profile.full_name;
-						gender2 = app.profile.gender;
-					}
-					
-					document.querySelector('#story [data-ref=user-rand-2-2]').textContent = userrand2;
-					document.querySelector('#story [data-ref=user-rand-1-2]').textContent = userrand1;
+                    var madlib = document.getElementById("story").innerHTML;
+                    alert(madlib);
+                    console.log(madlib);
+                    if (app.db == null) {
+                        app.db = sqlitePlugin.openDatabase({
+                            name: app.appDatabaseName,
+                            iosDatabaseLocation: 'default'
+                        });
+                    }
+                    //insert the new madlib into the madlibs table (creating a new contact)
+                    app.db.executeSql("INSERT INTO madlibs(full_name, madlib_txt) VALUES(?, ?)", [name, madlib], function (res) {
+                        //insert the new madlib into the madlibs table (creating a new contact)
+                        console.log("madlib created and saved");
+                        //new li will be displayed when contact page loads
+                        document.getElementById("madlibLink").click();
+                    }, function (error) {
+                        console.log("Failed to save madlib " + error.message);
+                    });
 
-					document.querySelector('#story [data-ref=date]').textContent = today;
-					document.querySelector('#story [data-ref=social]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.social : social;
+                } else {
+                    alert("Oops Scan cancelled");
+                }
+            }
+        );
 
-					document.querySelector('#story [data-ref=transport]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.transport : transport;
-
-					document.querySelector('#story [data-ref=facial]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.facial : facial;
-					document.querySelector('#story [data-ref=time]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.time : time;
-					document.querySelector('#story [data-ref=food]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.food : food;
-					document.querySelector('#story [data-ref=number]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.number : number;
-					
-					var madlibtext = document.getElementById("story").innerHTML;
-					
-					//open the database
-					if (app.db == null) {
-						app.db = sqlitePlugin.openDatabase({ name: 'DBmeetcute.2',iosDatabaseLocation: 'default'});
-					}
-					//insert the madlib
-					app.db.transaction(function (tx) {
-						console.log("saving madlib data");
-						//insert the new madlib into the madlibs table (creating a new contact)
-						tx.executeSql('INSERT INTO madlibs (full_name, madlib_txt) VALUES(?,?)', [name, madlibtext], function () {
-							document.getElementById('madlibLink').click();
-							console.log("Inserting Madlibs worked"); //
-						}, function (e) {
-						
-							console.log(e.message);
-						});
-					});
-				}
-			},
-			function (error) {
-				alert("Scanning failed: " + error);
-
-			}
-		);
-		
-	},// end of function
+    },// end of function
 	
 
 	loadStory: function (contact_id) {

@@ -74,7 +74,7 @@ var app = {
 		if (id == "contacts") {
 			console.log("get contacts list ready");
 			//call the fetch contacts page
-			fetchContacts();
+			app.fetchContacts();
 		}
 		if (id == "scan") {
 			console.log("get profile ready and qr code");
@@ -85,7 +85,7 @@ var app = {
 			//load the madlib story for the contact
 			var contact = ct.getAttribute("data-id");
 			// call the load story function
-			app.loadStory(contact_id);
+			app.loadStory(contact);
 
 		}
 	},
@@ -129,8 +129,8 @@ var app = {
 		var number = document.getElementById("txtNumber").value;
 		var facial = document.getElementById("txtFacial").value;
 
-		var output = name + ";" + email + ";" + gender + ";" + beverage + ";" + food + ";" + clothing + ";" + time + ";" + social + ";" + transport + ";" + number + ";" + facial + ";";
-		console.log(output);
+		//		var output = name + ";" + email + ";" + gender + ";" + beverage + ";" + food + ";" + clothing + ";" + time + ";" + social + ";" + transport + ";" + number + ";" + facial + ";";
+		//		console.log(output);
 
 
 		//check to ensure the app.db object has been created
@@ -214,7 +214,6 @@ var app = {
 		});
 
 	},
-
 	fetchProfile: function () {
 		//fetch all the profile info from profile table
 		if (app.db == null) {
@@ -225,20 +224,18 @@ var app = {
 		};
 
 		app.db.executeSql('SELECT item_name, item_value FROM profile ORDER BY item_id', [], function (results) {
-				console.log("i getto fetch pforile");
 				var numRows = results.rows.length;
+
 				app.profile = {};
+				//update app.profile
 				for (var i = 0; i < numRows; i++) {
 					app.profile[results.rows.item(i).item_name] = results.rows.item(i).item_value;
 				}
-				//app.createQR();
-				//update app.profile
-				document.getElementById("name").textContent = "Name:" + app.profile['full_name']; 
-				console.log(app.profile['name']);
+				app.createQR();
+				//update home page info based on app.profile
+				document.getElementById("name").textContent = "Name:" + app.profile['full_name'];
 				document.getElementById("email").textContent = "Email: " + app.profile['email'];
-				console.log(app.profile['email']);
 				document.getElementById("gender").textContent = "Gender pronoun: " + app.profile['gender'];
-				console.log(app.profile['gender']);
 				document.getElementById("beverage").textContent = "Type of Beverage: " + app.profile['beverage'];
 				document.getElementById("food").textContent = "Type of Food: " + app.profile['food'];
 				document.getElementById("clothing").textContent = "Clothing: " + app.profile['clothing'];
@@ -247,14 +244,13 @@ var app = {
 				document.getElementById("transport").textContent = "Mode of Transport: " + app.profile['transport'];
 				document.getElementById("number").textContent = "Favourite Number: " + app.profile['number'];
 				document.getElementById("facial").textContent = "Facial Expression: " + app.profile['facial'];
-			
+
 			},
 			function (error) {
 				console.log("failed to fetch resutls for profile" + error.message);
 			});
-		//update home page info based on app.profile
 		//generate the new QRCode based on the profile
-		//app.createQR();
+
 
 
 	},
@@ -268,6 +264,7 @@ var app = {
 
 		//update the QR caode using new QRCode( ) method
 		//Link: https://davidshimjs.githun.io/qrcodejs
+		document.getElementById("qr").textContent = "";
 		var qrcode = new QRCode(document.getElementById("qr"), {
 			text: str,
 			width: 300,
@@ -283,78 +280,146 @@ var app = {
 		modal.init();
 	},
 	fetchContacts: function () {
-
 		//open the database and query the madlib table
-		// if the rows are zero 
-		//create a list 
-		//madlib_id use the for loop 
-		// li set atttribute set href=madlib
-		//select all the madlib_id, full_name form madlibs table
+		if (app.db == null) {
+			app.db = sqlitePlugin.openDatabase({
+				name: 'DBmeetcute.2',
+				iosDatabaseLocation: 'default'
+			});
+		}
+		app.db.executeSql('SELECT madlib_id, full_name FROM madlibs ORDER BY full_name', [], function (results) {
+			var contacts_length = results.rows.length;
+			var ul = document.getElementById("list");
+			ul.innerHTML = "";
 
-		/*  var li = document.createElement("li");   
-                    li.innerHTML = '<h3 data-href= contact_id > </h3>';
-                    li.addEventListener("click", app.navigate);
-                    ul.appendChild(li);
-						*/
+			if (contacts_length == 0) {
+				var li = document.createElement("li");
+				li.textContent = "No contacts";
+				li.setAttribute("data-id", 0);
+				ul.appendChild(li);
+				alert("contacts==0");
+				
+			} else {
+				alert("I worked");
+				//loop through results and build the list for contacts page
+				for (var i = 0; i < contacts_length; i++) {
+					var li = document.createElement("li");
+					li.textContent = results.rows.item(i).full_name;
+					li.setAttribute("data-id", results.rows.item(i).madlib_id);
+					li.setAttribute("data-href", "madlib");
+					//add click event to each li to call app.navigate
+					li.addEventListener("click", app.navigate);
+					ul.appendChild(li);
+				}
+			}
 
-		//loop through results and build the list for contacts page
+		});
+
+
+
+
 		//add click event to each li to call app.navigate
 	},
 	scan: function (ev) {
-		ev.preventDefault();
+        ev.preventDefault();
+        cordova.plugins.barcodeScanner.scan(
+            function (result) {
+                console.log(result.format);
+                console.log(result.cancelled);
+                if (!result.cancelled) {
+                    //extract the string from the QRCode
+                    var strQR = result.text;
+                    var partsQR = strQR.split(";");
+                    var name = partsQR[0];
+                    var email = partsQR[1];
+                    var gender = partsQR[2];
+                    var beverage = partsQR[3];
+                    var food = partsQR[4];
+                    var clothing = partsQR[5];
+                    var time = partsQR[6];
+                    var social = partsQR[7];
+                    var transport = partsQR[8];
+                    var number = partsQR[9];
+                    var facial = partsQR[10];
+                    var date = new Date();
+                    var today = date.getDate() + " " + app.months[date.getMonth()];
+                    var userrand1, userrand2;
+                    if ((Math.round(Math.random())) == 0) {
+                        userrand1 = app.profile.full_name;
+                        gender1 = app.profile.gender;
+                        userrand2 = name;
+                        gender2 = gender;
+                    } else {
+                        userrand1 = name;
+                        gender1 = gender;
+                        userrand2 = app.profile.full_name;
+                        gender2 = app.profile.gender;
+                    }
+                    var test = "N:" + name + ";E:" + email + ";G:" + gender + ";B:" + beverage + ";F:" + food + ";C:" + clothing + ";T:" + time + ";M:" + social + ";T:" + transport + ";N:" + number + ";F:" + facial;
+                    console.log(test + "AND" + userrand1 + ";" + userrand2 + ";" + gender1 + ";" + gender2);
 
-		//call the plugin barcodeScanner.scan() method
-		cordova.plugins.barcodeScanner.scan(function (result) {
-				alert("We got a barcode\n" +
-					"Result: " + result.text + "\n" +
-					"Format: " + result.format + "\n" +
-					"Cancelled: " + result.cancelled);
-				if (!result.cancelled) {
-					//extract the string from the QRCode
-					var strQR = result.text;
-					var partsQR = strQR.split(";");
-					var name = partsQR[0];
-					var email = partsQR[1];
-					var gender = partsQR[2];
-					var beverage = partsQR[3];
-					var food = partsQR[4];
-					var clothing = partsQR[5];
-					var time = partsQR[6];
-					var social = partsQR[7];
-					var transport = partsQR[8];
-					var number = partsQR[9];
-					var facial = partsQR[10];
-					//build a madlib by randomly picking a value from app.profile OR data from QRCode
-					var date = new Date();
-					var today = dat.getDate + " " + app.months[date.getMonth()];
+                    //build a madlib by randomly picking a value from app.profile OR data from QRCode
+                    document.querySelector('#story [data-ref="user-a"]').textContent = app.profile.full_name;
+                    document.querySelector('#story [data-ref="user-b"]').textContent = name;
+                    document.querySelector('#story [data-ref="date"]').textContent = today;
+                    document.querySelector('#story [data-ref="beverage-1"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.beverage : beverage;
+                    document.querySelector('#story [data-ref="transport"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.transport : transport;
+                    document.querySelector('#story [data-ref="user-rand-1-1"]').textContent = userrand1;
+                    document.querySelector('#story [data-ref="gender-1"]').textContent = gender1;
+                    document.querySelector('#story [data-ref="beverage-2"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.beverage : beverage;
+                    document.querySelector('#story [data-ref="user-rand-2-1"]').textContent = userrand2;
+                    document.querySelector('#story [data-ref="clothing"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.clothing : clothing;
+                    document.querySelector('#story [data-ref="user-rand-2-2"]').textContent = userrand2;
+                    document.querySelector('#story [data-ref="user-rand-1-2"]').textContent = userrand1;
+                    document.querySelector('#story [data-ref="facial"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.facial : facial;
+                    document.querySelector('#story [data-ref="social"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.social : social;
+                    document.querySelector('#story [data-ref="time"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.time : time;
+                    document.querySelector('#story [data-ref="number"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.number : number;
+                    document.querySelector('#story [data-ref="food"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.food : food;
 
-					if (Math.round(Math.random()) == 0) {
-						// we are zero
-					} else {
-						//we are one
-					}
+                    var madlib = document.getElementById("story").innerHTML;
+                    alert(madlib);
+                    console.log(madlib);
+                    if (app.db == null) {
+                        app.db = sqlitePlugin.openDatabase({
+                            name: app.appDatabaseName,
+                            iosDatabaseLocation: 'default'
+                        });
+                    }
+                    //insert the new madlib into the madlibs table (creating a new contact)
+                    app.db.executeSql("INSERT INTO madlibs(full_name, madlib_txt) VALUES(?, ?)", [name, madlib], function (res) {
+                        //insert the new madlib into the madlibs table (creating a new contact)
+                        console.log("madlib created and saved");
+                        //new li will be displayed when contact page loads
+                        document.getElementById("madlibLink").click();
+                    }, function (error) {
+                        console.log("Failed to save madlib " + error.message);
+                    });
 
-				}
-			},
-			function (error) {
-				alert("Scanning failed: " + error);
-			}
-			
-			//generate the mad lib here
+                } else {
+                    alert("Oops Scan cancelled");
+                }
+            }
+        );
 
-		);
-
-		//insert the new madlib into the madlibs table (creating a new contact)
-
-		//new li will be displayed when contact page loads
-
-	},
+    },// end of function
+	
 
 	loadStory: function (contact_id) {
+		if (app.db == null) {
+			app.db = sqlitePlugin.openDatabase({
+				name: app.appDatabaseName,
+				iosDatabaseLocation: 'default'
+			});
+		}//use the contact_id as the madlib_id from madlibs table
+		app.db.executeSql('SELECT madlib_txt FROM madlibs WHERE madlib_id=?', [contact_id], function (results) {
+			var madlib_story = results.rows.item(0).madlib_txt;
+			document.getElementById('story').innerHTML = madlib_story;
 
-		//use the contact_id as the madlib_id from madlibs table
-
-		//select the madlib_txt and display as the new madlib
+		}, function (e) {
+			console.log(e.message);
+		});
+		
 
 	},
 	popPop: function (ev) {

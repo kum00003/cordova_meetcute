@@ -24,6 +24,9 @@
         },
         "cordova-sqlite-storage": {
             "PACKAGE_NAME": "ca.edumedia.kum00003"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "ca.edumedia.kum00003"
         }
     },
     "dependent_plugins": {}
