@@ -85,7 +85,7 @@ var app = {
 			//load the madlib story for the contact
 			var contact = ct.getAttribute("data-id");
 			// call the load story function
-			app.loadStory(contact_id);
+			app.loadStory(contact);
 
 		}
 	},
@@ -129,8 +129,8 @@ var app = {
 		var number = document.getElementById("txtNumber").value;
 		var facial = document.getElementById("txtFacial").value;
 
-		var output = name + ";" + email + ";" + gender + ";" + beverage + ";" + food + ";" + clothing + ";" + time + ";" + social + ";" + transport + ";" + number + ";" + facial + ";";
-		console.log(output);
+		//		var output = name + ";" + email + ";" + gender + ";" + beverage + ";" + food + ";" + clothing + ";" + time + ";" + social + ";" + transport + ";" + number + ";" + facial + ";";
+		//		console.log(output);
 
 
 		//check to ensure the app.db object has been created
@@ -231,7 +231,7 @@ var app = {
 				for (var i = 0; i < numRows; i++) {
 					app.profile[results.rows.item(i).item_name] = results.rows.item(i).item_value;
 				}
-
+				app.createQR();
 				//update home page info based on app.profile
 				document.getElementById("name").textContent = "Name:" + app.profile['full_name'];
 				document.getElementById("email").textContent = "Email: " + app.profile['email'];
@@ -250,7 +250,7 @@ var app = {
 				console.log("failed to fetch resutls for profile" + error.message);
 			});
 		//generate the new QRCode based on the profile
-		app.createQR();
+
 
 
 	},
@@ -281,31 +281,55 @@ var app = {
 	},
 	fetchContacts: function () {
 		//open the database and query the madlib table
-		// if the rows are zero 
-		//create a list 
-		//madlib_id use the for loop 
-		// li set atttribute set href=madlib
-		//select all the madlib_id, full_name form madlibs table
+		if (app.db == null) {
+			app.db = sqlitePlugin.openDatabase({
+				name: 'DBmeetcute.2',
+				iosDatabaseLocation: 'default'
+			});
+		}
+		app.db.executeSql('SELECT madlib_id, full_name FROM madlibs ORDER BY full_name', [], function (results) {
+			var contacts_length = results.rows.length;
+			var ul = document.getElementById("list");
+			ul.innerHTML = "";
 
-		var li = document.createElement("li");
-		li.innerHTML = '<h3 data-href= contact_id > </h3>';
-		li.addEventListener("click", app.navigate);
-		ul.appendChild(li);
+			if (contacts_length == 0) {
+				var li = document.createElement("li");
+				li.textContent = "No contacts";
+				li.setAttribute("data-id", 0);
+				ul.appendChild(li);
+				alert("contacts==0");
+				
+			} else {
+				alert("I worked");
+				//loop through results and build the list for contacts page
+				for (var i = 0; i < contacts_length; i++) {
+					var li = document.createElement("li");
+					li.textContent = results.rows.item(i).full_name;
+					li.setAttribute("data-id", results.rows.item(i).madlib_id);
+					li.setAttribute("data-href", "madlib");
+					//add click event to each li to call app.navigate
+					li.addEventListener("click", app.navigate);
+					ul.appendChild(li);
+				}
+			}
+
+		});
 
 
-		//loop through results and build the list for contacts page
+
+
 		//add click event to each li to call app.navigate
 	},
 	scan: function (ev) {
 		ev.preventDefault();
-
 		//call the plugin barcodeScanner.scan() method
-		cordova.plugins.barcodeScanner.scan(function (result) {
+		cordova.plugins.barcodeScanner.scan(
+			function (result) {
 				alert("We got a barcode\n" +
 					"Result: " + result.text + "\n" +
 					"Format: " + result.format + "\n" +
 					"Cancelled: " + result.cancelled);
-				if (result.cancelled) {
+				if (!result.cancelled) {
 					//extract the string from the QRCode
 					var strQR = result.text;
 					var partsQR = strQR.split(";");
@@ -325,6 +349,7 @@ var app = {
 					//build a madlib by randomly picking a value from app.profile OR data from QRCode
 					var date = new Date();
 					var today = dat.getDate + " " + app.months[date.getMonth()];
+					
 					var userrand1, userrand2, gender1;
 					if ((Math.round(Math.random())) == 0) {
 						userrand1 = app.profile.full_name;
@@ -337,49 +362,65 @@ var app = {
 						userrand2 = app.profile.full_name;
 						gender2 = app.profile.gender;
 					}
-					document.querySelector('#story [data-ref="user-rand-2-2"]').textContent = userrand2;
-					document.querySelector('#story [data-ref="user-rand-1-2"]').textContent = userrand1;
 					
-					document.querySelector('#story [data-ref="date"]').textContent = today;
-					document.querySelector('#story [data-ref="social"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.social : social;
-					
-					document.querySelector('#story [data-ref="transport"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.transport : transport;
-					
-					document.querySelector('#story [data-ref="facial"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.facial : facial;
-					document.querySelector('#story [data-ref="time"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.time : time;
-					document.querySelector('#story [data-ref="food"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.food : food;
-					document.querySelector('#story [data-ref="number"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.number : number;
+					document.querySelector('#story [data-ref=user-rand-2-2]').textContent = userrand2;
+					document.querySelector('#story [data-ref=user-rand-1-2]').textContent = userrand1;
 
+					document.querySelector('#story [data-ref=date]').textContent = today;
+					document.querySelector('#story [data-ref=social]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.social : social;
+
+					document.querySelector('#story [data-ref=transport]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.transport : transport;
+
+					document.querySelector('#story [data-ref=facial]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.facial : facial;
+					document.querySelector('#story [data-ref=time]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.time : time;
+					document.querySelector('#story [data-ref=food]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.food : food;
+					document.querySelector('#story [data-ref=number]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.number : number;
+					
 					var madlibtext = document.getElementById("story").innerHTML;
-					console.log(madlibtext);
+					
+					//open the database
+					if (app.db == null) {
+						app.db = sqlitePlugin.openDatabase({ name: 'DBmeetcute.2',iosDatabaseLocation: 'default'});
+					}
+					//insert the madlib
+					app.db.transaction(function (tx) {
+						console.log("saving madlib data");
+						//insert the new madlib into the madlibs table (creating a new contact)
+						tx.executeSql('INSERT INTO madlibs (full_name, madlib_txt) VALUES(?,?)', [name, madlibtext], function () {
+							document.getElementById('madlibLink').click();
+							console.log("Inserting Madlibs worked"); //
+						}, function (e) {
+						
+							console.log(e.message);
+						});
+					});
 				}
 			},
 			function (error) {
 				alert("Scanning failed: " + error);
-			console.log(madlibtext);
+
 			}
 		);
-		//insert the new madlib into the madlibs table (creating a new contact)
-		tx.executeSql('INSERT INTO mablibs(full_name, madlib_txt) VALUES(?,?)', [full_name, madlib_text], function () {
-			// success
+		
+	},// end of function
+	
+
+	loadStory: function (contact_id) {
+		if (app.db == null) {
+			app.db = sqlitePlugin.openDatabase({
+				name: app.appDatabaseName,
+				iosDatabaseLocation: 'default'
+			});
+		}//use the contact_id as the madlib_id from madlibs table
+		app.db.executeSql('SELECT madlib_txt FROM madlibs WHERE madlib_id=?', [contact_id], function (results) {
+			var madlib_story = results.rows.item(0).madlib_txt;
+			document.getElementById('story').innerHTML = madlib_story;
+
 		}, function (e) {
 			console.log(e.message);
 		});
-
-		//new li will be displayed when contact page loads
-		var li = document.createElement("li");
-		li.textContent = full_name;
-		var contact = document.getElementById("list");
-		contact.appendChild(li);
-
-	},
-
-	loadStory: function (contact_id) {
-
-		//use the contact_id as the madlib_id from madlibs table
-
-		//select the madlib_txt and display as the new madlib
 		
+
 	},
 	popPop: function (ev) {
 		//handle the back button
