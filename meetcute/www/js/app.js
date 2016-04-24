@@ -74,7 +74,7 @@ var app = {
 		if (id == "contacts") {
 			console.log("get contacts list ready");
 			//call the fetch contacts page
-			fetchContacts();
+			app.fetchContacts();
 		}
 		if (id == "scan") {
 			console.log("get profile ready and qr code");
@@ -225,16 +225,15 @@ var app = {
 
 		app.db.executeSql('SELECT item_name, item_value FROM profile ORDER BY item_id', [], function (results) {
 				var numRows = results.rows.length;
-			
+
 				app.profile = {};
 				//update app.profile
 				for (var i = 0; i < numRows; i++) {
 					app.profile[results.rows.item(i).item_name] = results.rows.item(i).item_value;
 				}
-				app.createQR();
-				
+
 				//update home page info based on app.profile
-				document.getElementById("name").textContent = "Name:" + app.profile['full_name']; 
+				document.getElementById("name").textContent = "Name:" + app.profile['full_name'];
 				document.getElementById("email").textContent = "Email: " + app.profile['email'];
 				document.getElementById("gender").textContent = "Gender pronoun: " + app.profile['gender'];
 				document.getElementById("beverage").textContent = "Type of Beverage: " + app.profile['beverage'];
@@ -245,13 +244,13 @@ var app = {
 				document.getElementById("transport").textContent = "Mode of Transport: " + app.profile['transport'];
 				document.getElementById("number").textContent = "Favourite Number: " + app.profile['number'];
 				document.getElementById("facial").textContent = "Facial Expression: " + app.profile['facial'];
-			
+
 			},
 			function (error) {
 				console.log("failed to fetch resutls for profile" + error.message);
 			});
 		//generate the new QRCode based on the profile
-		
+		app.createQR();
 
 
 	},
@@ -262,7 +261,7 @@ var app = {
 			str += app.profile[prop] + ";";
 		};
 		console.log("QRCODE string: " + str);
-		
+
 		//update the QR caode using new QRCode( ) method
 		//Link: https://davidshimjs.githun.io/qrcodejs
 		document.getElementById("qr").textContent = "";
@@ -281,7 +280,6 @@ var app = {
 		modal.init();
 	},
 	fetchContacts: function () {
-
 		//open the database and query the madlib table
 		// if the rows are zero 
 		//create a list 
@@ -289,11 +287,11 @@ var app = {
 		// li set atttribute set href=madlib
 		//select all the madlib_id, full_name form madlibs table
 
-		/*  var li = document.createElement("li");   
-                    li.innerHTML = '<h3 data-href= contact_id > </h3>';
-                    li.addEventListener("click", app.navigate);
-                    ul.appendChild(li);
-						*/
+		var li = document.createElement("li");
+		li.innerHTML = '<h3 data-href= contact_id > </h3>';
+		li.addEventListener("click", app.navigate);
+		ul.appendChild(li);
+
 
 		//loop through results and build the list for contacts page
 		//add click event to each li to call app.navigate
@@ -322,44 +320,57 @@ var app = {
 					var transport = partsQR[8];
 					var number = partsQR[9];
 					var facial = partsQR[10];
-					
-					
+
+
 					//build a madlib by randomly picking a value from app.profile OR data from QRCode
 					var date = new Date();
 					var today = dat.getDate + " " + app.months[date.getMonth()];
-
-					if (Math.round(Math.random()) == 0) {
-						// we are zero
+					var userrand1, userrand2, gender1;
+					if ((Math.round(Math.random())) == 0) {
+						userrand1 = app.profile.full_name;
+						gender1 = app.profile.gender;
+						userrand2 = name;
+						gender2 = gender;
 					} else {
-						//we are one
+						userrand1 = name;
+						gender1 = gender;
+						userrand2 = app.profile.full_name;
+						gender2 = app.profile.gender;
 					}
+					document.querySelector('#story [data-ref="user-rand-2-2"]').textContent = userrand2;
+					document.querySelector('#story [data-ref="user-rand-1-2"]').textContent = userrand1;
+					
+					document.querySelector('#story [data-ref="date"]').textContent = today;
+					document.querySelector('#story [data-ref="social"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.social : social;
+					
+					document.querySelector('#story [data-ref="transport"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.transport : transport;
+					
+					document.querySelector('#story [data-ref="facial"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.facial : facial;
+					document.querySelector('#story [data-ref="time"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.time : time;
+					document.querySelector('#story [data-ref="food"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.food : food;
+					document.querySelector('#story [data-ref="number"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.number : number;
 
+					var madlibtext = document.getElementById("story").innerHTML;
+					console.log(madlibtext);
 				}
 			},
 			function (error) {
 				alert("Scanning failed: " + error);
-			}
 			
-			//generate the mad lib here
-											
+			}
 		);
-
-		if (app.db == null) {
-			app.db = sqlitePlugin.openDatabase({
-				name: 'DBmeetcute.2',
-				iosDatabaseLocation: 'default'
-			});
-		};
-		
-		tx.executeSql('INSERT INTO mablibs(full_name, madlib_txt) VALUES(?,?)', [contact_id, name], function () {
-				// success
-			}, function (e) {
-				console.log(e.message);
-			});
 		//insert the new madlib into the madlibs table (creating a new contact)
-		
-		
+		tx.executeSql('INSERT INTO madlibs(full_name, madlib_txt) VALUES(?,?)', [full_name, madlibtext], function () {
+			console.log("Inserting Madlibs worked");
+		}, function (e) {
+			console.log(e.message);
+		});
+
 		//new li will be displayed when contact page loads
+		var li = document.createElement("li");
+		li.textContent = full_name;
+		var contact = document.getElementById("list");
+		contact.appendChild(li);
 
 	},
 
@@ -368,7 +379,7 @@ var app = {
 		//use the contact_id as the madlib_id from madlibs table
 
 		//select the madlib_txt and display as the new madlib
-
+		
 	},
 	popPop: function (ev) {
 		//handle the back button
