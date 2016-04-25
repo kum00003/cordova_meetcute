@@ -34,7 +34,7 @@
         <param name="ios-package" value="CDVSplashScreen" />
         <param name="onload" value="true" />
     </feature>
-    <name>MeetCute Sercan</name>
+    <name>Sercan MeetCute</name>
     <description>
 			A sample Apache Cordova application that responds to the deviceready event.
 		</description>

@@ -24,9 +24,9 @@ var app = {
 
 		console.log("test the sqlitePlugin");
 		window.sqlitePlugin.echoTest(function () {
-			alert("sqlite plugin supported");
+			console.log("sqlite plugin supported");
 		}, function () {
-			alert("sqlite plugin NOT supported");
+			console.log("sqlite plugin NOT supported");
 		});
 		console.log("set up DB");
 		app.setupDB();
@@ -297,10 +297,10 @@ var app = {
 				li.textContent = "No contacts";
 				li.setAttribute("data-id", 0);
 				ul.appendChild(li);
-				alert("contacts==0");
+				console.log("Contacts are zero!");
 				
 			} else {
-				alert("I worked");
+				console.log(" results from madlibs got to the else ");
 				//loop through results and build the list for contacts page
 				for (var i = 0; i < contacts_length; i++) {
 					var li = document.createElement("li");
@@ -404,7 +404,7 @@ var app = {
     },// end of function
 	
 
-	loadStory: function (contact_id) {
+	loadStory: function (contact_id) {	
 		if (app.db == null) {
 			app.db = sqlitePlugin.openDatabase({
 				name: app.appDatabaseName,

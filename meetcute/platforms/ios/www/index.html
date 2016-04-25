@@ -33,6 +33,7 @@
             <h1>QR Codes</h1>
             <div id="qr"></div>
             <button class="btn" id="btnScan">Scan Code</button>
+            
         </section>
         
         <section data-role="page" id="contacts">
@@ -51,9 +52,9 @@
         
         <nav id="nav">
             <ul id="menu">
-                <li class="active-tab"><a href="#profile" data-href="profile"><i class="fa fa-2x fa-users"></i>Profile</a></li>
-                <li><a href="#scan" data-href="scan"><i class="fa fa-2x fa-qrcode"></i>Scan</a></li>
-                <li><a href="#contacts" data-href="contacts"><i class="fa fa-2x fa-list-ul"></i>Contacts</a></li>
+                <li class="active-tab"><a href="#profile" data-href="profile"><i class="fa fa-3x fa-users"></i>Profile</a></li>
+                <li><a href="#scan" data-href="scan"><i class="fa fa-3x fa-qrcode"></i>Scan</a></li>
+                <li><a href="#contacts" data-href="contacts"><i class="fa fa-3x fa-list-ul"></i>Contacts</a></li>
             </ul>
         </nav>
         
@@ -93,6 +94,7 @@
                     <select id="txtBeverage">
                         <option value="milk">Milk</option>
                         <option value="sake">Sake</option>
+                        <option value="coke">Coke</option>
                     </select>
                 </p>
                 <p>
@@ -100,20 +102,21 @@
                     <select id="txtFood">
                         <option value="pizza">Pizza</option>
                         <option value="sushi">Sushi</option>
+                        <option value="poutine">Poutine</option>
                     </select>
                 </p>
               </div>
               <button class="btn next">Next</button>
             </div>
             <div class="modal-step step-2 active-step">
-              <h2>Step 3 of 5</h3>
+              <h2>Step 3 of 5</h2>
               <div class="content">
                 <!-- content for the step -->
                 <p>
                     <label for="txtClothing">Type of Clothing</label>
                     <select id="txtClothing">
                         <option value="shorts">Shorts</option>
-                        <option value="sweater vest">Sweater Vest</option>
+                        <option value="sweater Vest">Sweater Vest</option>
                     </select>
                 </p>
                 <p>
@@ -142,10 +145,12 @@
                     <select id="txtTransport">
                         <option value="train">Train</option>
                         <option value="bus">Bus</option>
+                        <option value="car">Car</option>
                     </select>
                 </p>
               </div>
               <button class="btn next">Next</button>
+             
             </div>
             <div class="modal-step step-4">
               <h2>Step 5 of 5</h2>
@@ -159,6 +164,7 @@
                     <select id="txtFacial">
                         <option value="smirk">Smirk</option>
                         <option value="sneer">Sneer</option>
+                        <option value="frown">Frown</option>
                     </select>
                 </p>
               </div>

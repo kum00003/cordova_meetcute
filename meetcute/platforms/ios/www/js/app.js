@@ -24,9 +24,9 @@ var app = {
 
 		console.log("test the sqlitePlugin");
 		window.sqlitePlugin.echoTest(function () {
-			alert("sqlite plugin supported");
+			console.log("sqlite plugin supported");
 		}, function () {
-			alert("sqlite plugin NOT supported");
+			console.log("sqlite plugin NOT supported");
 		});
 		console.log("set up DB");
 		app.setupDB();
@@ -297,10 +297,10 @@ var app = {
 				li.textContent = "No contacts";
 				li.setAttribute("data-id", 0);
 				ul.appendChild(li);
-				alert("contacts==0");
+				console.log("Contacts are zero!");
 				
 			} else {
-				alert("I worked");
+				console.log(" results from madlibs got to the else ");
 				//loop through results and build the list for contacts page
 				for (var i = 0; i < contacts_length; i++) {
 					var li = document.createElement("li");
@@ -355,8 +355,7 @@ var app = {
                         userrand2 = app.profile.full_name;
                         gender2 = app.profile.gender;
                     }
-                    var test = "N:" + name + ";E:" + email + ";G:" + gender + ";B:" + beverage + ";F:" + food + ";C:" + clothing + ";T:" + time + ";M:" + social + ";T:" + transport + ";N:" + number + ";F:" + facial;
-                    console.log(test + "AND" + userrand1 + ";" + userrand2 + ";" + gender1 + ";" + gender2);
+                    
 
                     //build a madlib by randomly picking a value from app.profile OR data from QRCode
                     document.querySelector('#story [data-ref="user-a"]').textContent = app.profile.full_name;
@@ -378,8 +377,8 @@ var app = {
                     document.querySelector('#story [data-ref="food"]').textContent = ((Math.round(Math.random())) == 0) ? app.profile.food : food;
 
                     var madlib = document.getElementById("story").innerHTML;
-                    alert(madlib);
-                    console.log(madlib);
+                   // alert(madlib);
+                   // console.log(madlib);
                     if (app.db == null) {
                         app.db = sqlitePlugin.openDatabase({
                             name: app.appDatabaseName,
@@ -405,7 +404,7 @@ var app = {
     },// end of function
 	
 
-	loadStory: function (contact_id) {
+	loadStory: function (contact_id) {	
 		if (app.db == null) {
 			app.db = sqlitePlugin.openDatabase({
 				name: app.appDatabaseName,
